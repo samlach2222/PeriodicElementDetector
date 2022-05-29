@@ -8,9 +8,9 @@ namespace DDR_GraphMix
     class Program
     {
         static readonly Dictionary<string, int> elementList = new();
-        static string requestedWord;
-        static List<String> WordComposition = new();
-        static List<String> dictionnary = new();
+        static string? requestedWord;
+        static readonly List<string> WordComposition = new();
+        static readonly List<string> dictionnary = new();
         static sbyte lastPercentage = -1;
 
         static void Main()
@@ -22,10 +22,13 @@ namespace DDR_GraphMix
         /****************************************************************/
         /*                        DICTIONNARY PART                      */
         /****************************************************************/
-        
+
+        /// <summary>
+        /// Retrieves words from the dictionary and stores them in the List
+        /// </summary>
         static void DictionnaryFilling()
         {
-            using (StreamReader streamReader = new StreamReader(@"Resources\liste.de.mots.francais.frgut.txt"))
+            using (StreamReader streamReader = new(@"Resources\liste.de.mots.francais.frgut.txt"))
             {
                 long fileLength = streamReader.BaseStream.Length;
                 while (!streamReader.EndOfStream)
@@ -60,6 +63,10 @@ namespace DDR_GraphMix
             }
         }
 
+        /// <summary>
+        /// Look up all the words in the dictionary that are compatible with the periodic table of elements
+        /// </summary>
+        /// <returns>List of all compatible words and encoding</returns>
         static Dictionary<String, String> FindAllWordInDictionnary()
         {
             Dictionary<String, String> result = new();
@@ -81,15 +88,17 @@ namespace DDR_GraphMix
             return result;
         }
 
+        /// <summary>
+        /// Create a Text file with all compatible word in dictionary
+        /// </summary>
+        /// <param name="list">List of all compatible words and encoding</param>
         static void CreateTxtFileDictionnary(Dictionary<String, String> list)
         {
             // create a new txt file
-            using (StreamWriter streamWriter = new StreamWriter(@"Resources\dictionnaryPeriodicElement.txt"))
+            using StreamWriter streamWriter = new StreamWriter(@"Resources\dictionnaryPeriodicElement.txt");
+            foreach (KeyValuePair<String, String> pair in list)
             {
-                foreach (KeyValuePair<String, String> pair in list)
-                {
-                    streamWriter.WriteLine(pair.Key + "\t" + pair.Value);
-                }
+                streamWriter.WriteLine(pair.Key + "\t" + pair.Value);
             }
         }
 
@@ -97,6 +106,9 @@ namespace DDR_GraphMix
         /*                            OTHER                             */
         /****************************************************************/
 
+        /// <summary>
+        /// Mode selection menu
+        /// </summary>
         static void Menu()
         {
             bool returnValue;
@@ -148,28 +160,37 @@ namespace DDR_GraphMix
             }
             while (returnValue);
         }
-        
+
+        /// <summary>
+        /// Requests an input of a word and then starts the search
+        /// </summary>
         static void FindAWord()
         {
             Console.Write("Enter your word : ");
             requestedWord = Console.ReadLine();
         }
-        
+
+        /// <summary>
+        /// Fill the table with all the elements from the file PeriodicTable.dat
+        /// </summary>
         static void ElementListFilling()
         {
-            using (StreamReader streamReader = new("Resources/PeriodicTable.dat"))
+            using StreamReader streamReader = new("Resources/PeriodicTable.dat");
+            while (!streamReader.EndOfStream)
             {
-                while (!streamReader.EndOfStream)
-                {
-                    string readLine = streamReader.ReadLine();
-                    string[] splitedLine = readLine.Split("\t"); // get the two ints of the line
-                    string elementLetter = splitedLine[0];
-                    int elementNumber = Int32.Parse(splitedLine[1]);
-                    elementList.Add(elementLetter, elementNumber);
-                }
+                string readLine = streamReader.ReadLine();
+                string[] splitedLine = readLine.Split("\t"); // get the two ints of the line
+                string elementLetter = splitedLine[0];
+                int elementNumber = Int32.Parse(splitedLine[1]);
+                elementList.Add(elementLetter, elementNumber);
             }
         }
 
+        /// <summary>
+        /// Return the element number of the given letter
+        /// </summary>
+        /// <param name="letters">Letters to search</param>
+        /// <returns>code of letters</returns>
         static int SearchLetters(string letters)
         {
             int value = -1;
@@ -183,7 +204,12 @@ namespace DDR_GraphMix
             return value;
         }
 
-        static void CreateTableTraitment(string word)
+        /// <summary>
+        /// Search if the word is compatible with the periodic table of elements
+        /// </summary>
+        /// <param name="word">word to compare with periodic table of elements</param>
+        ///
+        static void CreateTableTraitment(string word) //TODO: Change this method to extremely increase speed beacause, very poor efficiency 
         {
             // Manage single chars
             foreach (char letter in word)
@@ -211,6 +237,10 @@ namespace DDR_GraphMix
             }
         }
 
+        /// <summary>
+        /// Try to find the encoding of the word and if it's not found, return an empty string
+        /// </summary>
+        /// <returns>encoding of the word</returns>
         static string StringTraitment()
         {
             string returnEncode = "";
