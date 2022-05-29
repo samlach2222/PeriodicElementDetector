@@ -16,27 +16,7 @@ namespace DDR_GraphMix
         static void Main()
         {
             ElementListFilling(); // fill the table
-
-
-            // SINGLE WORD
-            //FindAWord(); // find a single word
-            //CreateTableTraitment(requestedWord);
-            //string encode = StringTraitment();
-            //if (encode != "")
-            //{
-            //    Console.WriteLine("The word is found");
-            //    Console.WriteLine("The code is " + encode);
-            //}
-            //else
-            //{
-             //   Console.WriteLine("The word is not found");
-            //}
-
-            
-            // ALL WORDS IN DICTIONNARY
-            DictionnaryFilling();
-            Dictionary<String, String> result = FindAllWordInDictionnary();
-            CreateTxtFileDictionnary(result);
+            Menu();
         }
 
         /****************************************************************/
@@ -113,6 +93,62 @@ namespace DDR_GraphMix
             }
         }
 
+        /****************************************************************/
+        /*                            OTHER                             */
+        /****************************************************************/
+
+        static void Menu()
+        {
+            bool returnValue;
+            do
+            {
+                Console.WriteLine("0. Find a single word");
+                Console.WriteLine("1. Find all words in dictionnary");
+                Console.WriteLine("2. Exit");
+
+                int choice = int.TryParse(Console.ReadLine(), out choice) ? choice : -1;
+                switch (choice)
+                {
+                    case 0:
+                        Console.WriteLine();
+                        // SINGLE WORD
+                        FindAWord(); // find a single word
+                        CreateTableTraitment(requestedWord);
+                        string encode = StringTraitment();
+                        if (encode != "")
+                        {
+                            Console.WriteLine("The word is found");
+                            Console.WriteLine("The code is " + encode);
+                        }
+                        else
+                        {
+                           Console.WriteLine("The word is not found");
+                        }
+                        returnValue = false;
+                        break;
+                    case 1:
+                        Console.WriteLine();
+                        // ALL WORDS IN DICTIONNARY
+                        DictionnaryFilling();
+                        Dictionary<String, String> result = FindAllWordInDictionnary();
+                        CreateTxtFileDictionnary(result);
+                        returnValue = false;
+                        break;
+                    case 2:
+                        Console.WriteLine();
+                        // close program
+                        Environment.Exit(0);
+                        returnValue = false;
+                        break;
+                    default:
+                        Console.WriteLine("/!\\ BAD VALUE ! /!\\\n");
+                        returnValue = true;
+                        break;
+                }
+            }
+            while (returnValue);
+        }
+        
         static void FindAWord()
         {
             Console.Write("Enter your word : ");
