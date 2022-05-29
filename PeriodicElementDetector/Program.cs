@@ -8,7 +8,7 @@ namespace DDR_GraphMix
     class Program
     {
         static readonly Dictionary<string, int> elementList = new();
-        static string? requestedWord;
+        static string requestedWord;
         static readonly List<string> WordComposition = new();
         static readonly List<string> dictionnary = new();
         static sbyte lastPercentage = -1;
@@ -131,6 +131,7 @@ namespace DDR_GraphMix
                         {
                             Console.WriteLine("The word is found");
                             Console.WriteLine("The code is " + encode);
+                            Console.ReadLine();
                         }
                         else
                         {
@@ -262,9 +263,8 @@ namespace DDR_GraphMix
                 }
                 if (attempt == requestedWord) // if word finded
                 {
-                    goto end;
-                    Console.WriteLine(encode);
                     returnEncode = encode;
+                    goto end;
                 }
             }
             end:
